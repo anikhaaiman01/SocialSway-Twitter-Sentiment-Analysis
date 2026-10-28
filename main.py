@@ -1,52 +1,23 @@
-# Install required libraries (run this in a notebook or terminal, not in a .py file)
-# !pip install nltk scikit-learn matplotlib seaborn wordcloud
+# Install required libraries
+!pip install nltk scikit-learn matplotlib seaborn wordcloud
 
 # Import libraries
-import importlib
-import re
-
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-
-# Resolve optional dependencies safely so the project does not fail when packages are missing.
-try:
-    sns = importlib.import_module('seaborn')
-except ModuleNotFoundError:
-    sns = None
-
-try:
-    from wordcloud import WordCloud  # type: ignore[reportMissingImports]
-except ModuleNotFoundError:
-    WordCloud = None
-
+import numpy as np
+import re
+import nltk
+import seaborn as sns
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
+from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-from sklearn.model_selection import train_test_split
 
-# Resolve NLTK safely so the project does not fail when the package is missing.
-try:
-    nltk = importlib.import_module('nltk')
-    stopwords_module = importlib.import_module('nltk.corpus')
-    stopwords = stopwords_module.stopwords
-    nltk.download('stopwords', quiet=True)
-    stop_words = set(stopwords.words('english'))
-except ModuleNotFoundError:
-    nltk = None
-    stop_words = {
-        'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours',
-        'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself',
-        'it', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which',
-        'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be',
-        'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an',
-        'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for',
-        'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above',
-        'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further',
-        'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each',
-        'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so',
-        'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now'
-    }
+# Download stopwords
+nltk.download('stopwords')
+from nltk.corpus import stopwords
+stop_words = set(stopwords.words('english'))
 
 # -------------------------------
 # Stage 1: Data Collection
